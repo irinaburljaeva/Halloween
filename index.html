@@ -1,122 +1,368 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Halloween Mystery Game</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Haunted Escape — Advanced</title>
 <style>
-body {
-  margin: 0;
-  padding: 0;
-  font-family: "Georgia", serif;
-  background-color: #0d0d0d;
-  color: #f3e9d2;
-  overflow: hidden;
-}
-#game-container {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  background-size: cover;
-  background-position: center;
-  transition: background-image 1s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 40px;
-  box-sizing: border-box;
-}
-.text-box {
-  background: rgba(10, 10, 10, 0.8);
-  padding: 25px;
-  border-radius: 12px;
-  font-size: 1.2em;
-  line-height: 1.5;
-  max-width: 700px;
-}
-button {
-  margin-top: 20px;
-  background-color: #d4a373;
-  border: none;
-  color: #1a1a1a;
-  padding: 12px 25px;
-  border-radius: 8px;
-  font-size: 1em;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-button:hover {
-  background-color: #e7b67a;
-}
-.fade-in {
-  animation: fadeIn 1s ease forwards;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+  :root{
+    --bg:#0d0d10; --panel:rgba(10,10,12,.86); --ink:#f3e9d2;
+    --acc:#d4a373; --acc2:#e7b67a; --err:#ff6b6b; --ok:#7df9b7;
+  }
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,Segoe UI,Georgia,serif;overflow:hidden}
+  #stage{
+    position:relative;width:100vw;height:100vh;background:#000 center/cover no-repeat;
+    display:flex;flex-direction:column;justify-content:flex-end;padding:40px;box-sizing:border-box
+  }
+  .panel{background:var(--panel);border:1px solid #2c2c39;border-radius:14px;max-width:880px;padding:22px 24px;box-shadow:0 0 18px rgba(0,0,0,.55)}
+  h1,h2{margin:.2em 0;text-align:center;color:#ff7a00;font-weight:700}
+  p{margin:.6em 0}
+  .row{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  input,select{
+    background:#15151c;border:1px solid #2c2c39;color:#fff;border-radius:8px;
+    padding:10px 12px;min-width:180px
+  }
+  button{
+    background:var(--acc);border:0;color:#1a1a1a;padding:10px 18px;border-radius:10px;cursor:pointer;
+    font-weight:600
+  }
+  button:hover{background:var(--acc2)}
+  .ghost{opacity:.7;font-style:italic;color:#b9b6cc}
+  .msg{margin-top:8px;min-height:22px}
+  .ok{color:var(--ok);font-weight:700}
+  .bad{color:var(--err);font-weight:700}
+  .controls{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+  .grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+  .fade{animation:fade .9s}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .muted{opacity:.6}
+  .small{font-size:.95em}
+  .tag{padding:2px 8px;border:1px dashed #444;border-radius:999px;font-size:.85em;color:#ccc}
+  .center{text-align:center}
+  .space{height:10px}
 </style>
 </head>
 <body>
+<div id="stage">
+  <div id="panel" class="panel fade">
+    <h1>🎃 Haunted Escape — Advanced</h1>
+    <p class="center small ghost">Solve every step to proceed. Hints are limited.</p>
+    <div class="space"></div>
 
-<div id="game-container">
-  <div id="text" class="text-box fade-in"></div>
-  <button id="next-btn">Next</button>
+    <!-- INTRO -->
+    <div id="scene-intro" class="grid">
+      <p>It’s a stormy Halloween night. The power flickers as you wake in an old mansion. Somewhere inside, a key waits. The house speaks: <em>“Only the keen may walk free.”</em></p>
+      <div class="controls center">
+        <button id="startBtn">Enter the Library</button>
+        <span id="hintCounter" class="tag">Hints left: <b>3</b></span>
+      </div>
+    </div>
+
+    <!-- ROOM 1 — LIBRARY -->
+    <div id="scene-lib" class="grid" style="display:none">
+      <h2>Room 1 — The Whispering Library</h2>
+
+      <!-- Step A -->
+      <div id="libA">
+        <p>You find four bookmarks with titles:</p>
+        <ul>
+          <li><b>First</b> — “History of Kings”, page <b>1</b></li>
+          <li><b>Last</b> — “The End of Time”, page <b>999</b></li>
+          <li><b>Eternity</b> — the symbol <b>∞</b> inked on the margin</li>
+          <li><b>Echo</b> — a brass plate under the clock engraved <b>×2</b></li>
+        </ul>
+        <p class="ghost">A whisper: <em>“Name the path hidden in their first letters.”</em></p>
+        <div class="row">
+          <input id="libWord" placeholder="secret word (one word)">
+          <button onclick="checkLibA()">Confirm</button>
+          <button onclick="hint('libA')">Hint</button>
+        </div>
+        <div id="libMsgA" class="msg"></div>
+      </div>
+
+      <!-- Step B -->
+      <div id="libB" style="display:none">
+        <p>Ink blooms across the cover:</p>
+        <blockquote>
+          First → take the first digit.<br/>
+          Last → take the last digit.<br/>
+          Eternity → turn ∞ into a number.<br/>
+          Echo ×2 → repeat the last digit twice.
+        </blockquote>
+        <p class="ghost">The three books and the plate should give a four-digit code.</p>
+        <div class="row">
+          <input id="libCode" placeholder="4-digit code">
+          <button onclick="checkLibB()">Unlock</button>
+          <button onclick="hint('libB')">Hint</button>
+        </div>
+        <div id="libMsgB" class="msg"></div>
+      </div>
+    </div>
+
+    <!-- ROOM 2 — ALCHEMIST -->
+    <div id="scene-alc" class="grid" style="display:none">
+      <h2>Room 2 — The Alchemist’s Workshop</h2>
+
+      <!-- Step A -->
+      <div id="alcA">
+        <p>On the table a parchment shows a four-line acrostic. The capital letters glow faintly:</p>
+        <blockquote class="ghost">
+          <b>L</b>et <u>us</u> cross the night with spark;<br/>
+          <b>V</b>oices of air will guide the mark;<br/>
+          <b>U</b>nder the shade we hide our flame; <br/>
+          <b>M</b>emory keeps the hidden name.
+        </blockquote>
+        <p>Write the three Latin words (comma-separated) the acrostic points to. Order matters.</p>
+        <p class="small muted">Expected language: Latin. No spaces around commas.</p>
+        <div class="row">
+          <input id="alcWords" placeholder="e.g. lux,ventus,umbra">
+          <button onclick="checkAlcA()">Mix</button>
+          <button onclick="hint('alcA')">Hint</button>
+        </div>
+        <div id="alcMsgA" class="msg"></div>
+      </div>
+
+      <!-- Step B -->
+      <div id="alcB" style="display:none">
+        <p>A copper ring reads: <em>“Take the value of the Roman numerals hidden in the three words.”</em></p>
+        <p class="ghost small">Consider only the letters that are Roman numerals: I V X L C D M. Sum them across all three words.</p>
+        <div class="row">
+          <input id="alcCode" placeholder="4-digit number">
+          <button onclick="checkAlcB()">Distill</button>
+          <button onclick="hint('alcB')">Hint</button>
+        </div>
+        <div id="alcMsgB" class="msg"></div>
+      </div>
+    </div>
+
+    <!-- ROOM 3 — HALL OF MIRRORS -->
+    <div id="scene-mir" class="grid" style="display:none">
+      <h2>Room 3 — The Hall of Mirrors</h2>
+
+      <!-- Step A -->
+      <div id="mirA">
+        <p>On misted glass a backward word appears: <code class="muted">NOITCELFER</code>.</p>
+        <p class="ghost">Write it as you would in a normal, non-mirrored world.</p>
+        <div class="row">
+          <input id="mirWord" placeholder="word">
+          <button onclick="checkMirA()">Reveal</button>
+          <button onclick="hint('mirA')">Hint</button>
+        </div>
+        <div id="mirMsgA" class="msg"></div>
+      </div>
+
+      <!-- Step B -->
+      <div id="mirB" style="display:none">
+        <p>Shards arrange into a sentence, but every second letter is missing:</p>
+        <blockquote class="ghost"><code>C N D E I H T</code></blockquote>
+        <p>Rebuild the word by inserting the letters you got from the mirrors’ frames: they repeat the pattern <code>A L G H T</code> under low light.</p>
+        <p class="small muted">Combine the two streams to form one meaningful word.</p>
+        <div class="row">
+          <input id="mirFinal" placeholder="final word">
+          <button onclick="checkMirB()">Assemble</button>
+          <button onclick="hint('mirB')">Hint</button>
+        </div>
+        <div id="mirMsgB" class="msg"></div>
+      </div>
+    </div>
+
+    <!-- ROOM 4 — THE FINAL DOOR -->
+    <div id="scene-door" class="grid" style="display:none">
+      <h2>The Final Door</h2>
+
+      <!-- Step A -->
+      <div id="doorA">
+        <p>On the arch a poem is carved. The first letters glow:</p>
+        <blockquote class="ghost">
+          <b>A</b>fter heat, the air grows thin;<br/>
+          <b>U</b>nder trees, the fires dim;<br/>
+          <b>T</b>ired light turns copper, then;<br/>
+          <b>U</b>ntied winds bring leaves to spin;<br/>
+          <b>M</b>oss and smoke, a scented hymn;<br/>
+          <b>N</b>ight comes early. Name the season.
+        </blockquote>
+        <div class="row">
+          <input id="doorSeason" placeholder="season (one word)">
+          <button onclick="checkDoorA()">Confirm</button>
+          <button onclick="hint('doorA')">Hint</button>
+        </div>
+        <div id="doorMsgA" class="msg"></div>
+      </div>
+
+      <!-- Step B -->
+      <div id="doorB" style="display:none">
+        <p>Three locks remain. Enter the knowledge you gathered:</p>
+        <ul class="small">
+          <li>Library code (4 digits)</li>
+          <li>Mirrors word (all caps)</li>
+          <li>The season (from the arch)</li>
+        </ul>
+        <div class="row">
+          <input id="lockLib" placeholder="code">
+          <input id="lockMir" placeholder="word">
+          <input id="lockSeason" placeholder="season">
+          <button onclick="checkDoorB()">Open</button>
+        </div>
+        <div id="doorMsgB" class="msg"></div>
+      </div>
+    </div>
+
+    <!-- END -->
+    <div id="scene-end" class="grid center" style="display:none">
+      <h2>You Escaped! 🌕</h2>
+      <p>The door yields. Leaves spiral into the night as the mansion exhales a last, warm breath.</p>
+    </div>
+
+  </div>
 </div>
 
 <script>
-const scenes = [
-  {
-    bg: "intro.png",
-    text: "It’s a stormy Halloween night. The power flickers, and you find yourself trapped in an old mansion. The door locks behind you... Your goal: find the key to escape before midnight."
-  },
-  {
-    bg: "library.png",
-    text: "Room 1 – The Library. Shelves of ancient books tower around you. A single candle burns beside an open tome with strange runes. <br><br><strong>Task:</strong> Decode the message: <em>“The word before ‘moonlight’ hides your way.”</em><br><br>👉 What English word might be hidden before 'moonlight' in common phrases?",
-  },
-  {
-    bg: "alchemy.png",
-    text: "Room 2 – The Alchemist’s Workshop. Bottles glow with eerie green light. A note reads: <em>“Combine the essence of truth with the breath of fire.”</em><br><br><strong>Task:</strong> Choose the correct combination:<br>1️⃣ Honesty + Heat<br>2️⃣ Lie + Smoke<br>3️⃣ Fire + Ice"
-  },
-  {
-    bg: "mirrors.png",
-    text: "Room 3 – The Hall of Mirrors. You see dozens of your reflections. One whispers: <em>“Find the truth among lies.”</em><br><br><strong>Task:</strong> Which sentence is true?<br>1️⃣ The more mirrors you have, the less reflections you see.<br>2️⃣ Each mirror shows a reflection of truth.<br>3️⃣ Mirrors can only lie if you look away."
-  },
-  {
-    bg: "door.png",
-    text: "Final Room – The Door. A massive wooden gate stands before you. Above it glows an inscription: <em>“Speak the word of release.”</em><br><br><strong>Task:</strong> What word opens all doors? (Hint: it’s polite and magical.)"
-  },
-  {
-    bg: "door.png",
-    text: "The door creaks open… You step out into the night, free at last. Happy Halloween! 🎃"
-  }
-];
+/* ---------- ASSETS / BACKGROUNDS ---------- */
+const bg = {
+  intro: 'intro.png',
+  lib: 'library.png',
+  alc: 'alchemy.png',
+  mir: 'mirrors.png',
+  door: 'door.png'
+};
+const stage = document.getElementById('stage');
+const hintBadge = document.getElementById('hintCounter');
+let hintsLeft = 3;
+let attempts = {libA:0, libB:0, alcA:0, alcB:0, mirA:0, mirB:0, doorA:0, doorB:0};
 
-let currentScene = 0;
-
-const textElement = document.getElementById("text");
-const nextBtn = document.getElementById("next-btn");
-const container = document.getElementById("game-container");
-
-function updateScene() {
-  const scene = scenes[currentScene];
-  container.style.backgroundImage = `url(${scene.bg})`;
-  textElement.innerHTML = scene.text;
-  textElement.classList.add("fade-in");
-  setTimeout(() => textElement.classList.remove("fade-in"), 1000);
+/* ---------- VIEW HELPERS ---------- */
+function showScene(id, bgKey){
+  document.querySelectorAll('[id^="scene-"]').forEach(s=>s.style.display='none');
+  document.getElementById(id).style.display='grid';
+  stage.style.backgroundImage = `url(${bg[bgKey]})`;
+}
+function showStep(stepId){
+  document.getElementById(stepId).style.display='block';
+  document.getElementById(stepId).classList.add('fade');
+}
+function hide(el){ el.style.display='none'; }
+function setMsg(id, html){ document.getElementById(id).innerHTML = html; }
+function useHint(){
+  if (hintsLeft<=0) return false;
+  hintsLeft--; hintBadge.innerHTML = `Hints left: <b>${hintsLeft}</b>`;
+  return true;
 }
 
-nextBtn.addEventListener("click", () => {
-  currentScene++;
-  if (currentScene < scenes.length) {
-    updateScene();
-  } else {
-    nextBtn.style.display = "none";
-  }
+/* ---------- HINTS ---------- */
+function hint(where){
+  if(!useHint()) return;
+  const map = {
+    libA: 'Look at the FIRST letters of the four labels (First, Last, Eternity, Echo).',
+    libB: 'Pages give 1 (first) and 9 (last of 999); eternity turned sideways is 8; echo ×2 means repeat the last digit → 1988.',
+    alcA: 'The capitals L V U M hide Latin words: LUX (light), VENTUS (wind), UMBRA (shadow). Order them as they appear.',
+    alcB: 'Sum Roman numerals inside the three words: L=50, X=10, V=5, M=1000. 50+10+5+1000 = 1065.',
+    mirA: 'Read the backward word normally.',
+    mirB: 'Interleave streams: C N D E I H T with A L G H T → C A N D L E L I G H T (CANDLELIGHT).',
+    doorA:'Read the acrostic: the first letters spell AUTUMN.',
+    doorB:'You need the library code (1988), the mirrors word (CANDLELIGHT), and the season (autumn).'
+  };
+  alert(map[where]);
+}
+
+/* ---------- FLOW ---------- */
+document.getElementById('startBtn').addEventListener('click', ()=>{
+  showScene('scene-lib','lib');  // to library
 });
 
-updateScene();
-</script>
+/* ---------- ROOM 1: LIBRARY ---------- */
+function checkLibA(){
+  attempts.libA++;
+  const v = document.getElementById('libWord').value.trim().toUpperCase();
+  if(v==='FLEE'){
+    setMsg('libMsgA','<span class="ok">The shelves murmur: “Go on.” Hidden ink appears…</span>');
+    hide(document.getElementById('libA'));
+    showStep('libB');
+  } else {
+    setMsg('libMsgA', `<span class="bad">Not this word. Think of <b>F</b>irst, <b>L</b>ast, <b>E</b>ternity, <b>E</b>cho.</span>`);
+  }
+}
+function checkLibB(){
+  attempts.libB++;
+  const v = document.getElementById('libCode').value.trim();
+  if(v==='1988'){
+    setMsg('libMsgB','<span class="ok">The lock clicks open. A cold draft invites you onward…</span>');
+    setTimeout(()=>{ showScene('scene-alc','alc'); showStep('alcA'); }, 800);
+  }else{
+    setMsg('libMsgB','<span class="bad">Nothing happens. Re-read the four lines.</span>');
+  }
+}
 
+/* ---------- ROOM 2: ALCHEMIST ---------- */
+function checkAlcA(){
+  attempts.alcA++;
+  const v = document.getElementById('alcWords').value.trim().toLowerCase();
+  if(v==='lux,ventus,umbra'){
+    setMsg('alcMsgA','<span class="ok">The mixture glows silver-blue. Symbols rise from the ring…</span>');
+    hide(document.getElementById('alcA')); showStep('alcB');
+  }else{
+    setMsg('alcMsgA','<span class="bad">The brew turns green and hisses. Use Latin words and the right order.</span>');
+  }
+}
+function checkAlcB(){
+  attempts.alcB++;
+  const v = document.getElementById('alcCode').value.trim();
+  if(v==='1065'){
+    setMsg('alcMsgB','<span class="ok">The retort sings softly. A hidden door slides aside…</span>');
+    setTimeout(()=>{ showScene('scene-mir','mir'); showStep('mirA'); }, 800);
+  }else{
+    setMsg('alcMsgB','<span class="bad">The copper ring stays cold. Count only Roman numeral letters.</span>');
+  }
+}
+
+/* ---------- ROOM 3: MIRRORS ---------- */
+function checkMirA(){
+  attempts.mirA++;
+  const v = document.getElementById('mirWord').value.trim().toUpperCase();
+  if(v==='REFLECTION'){
+    setMsg('mirMsgA','<span class="ok">The fog clears, revealing scattered letters…</span>');
+    hide(document.getElementById('mirA')); showStep('mirB');
+  }else{
+    setMsg('mirMsgA','<span class="bad">Your breath blurs the glass again. Read it normally.</span>');
+  }
+}
+function checkMirB(){
+  attempts.mirB++;
+  const v = document.getElementById('mirFinal').value.trim().toUpperCase();
+  if(v==='CANDLELIGHT'){
+    setMsg('mirMsgB','<span class="ok">Shards fuse into a warm glow. A passage opens to the hall…</span>');
+    setTimeout(()=>{ showScene('scene-door','door'); showStep('doorA'); }, 800);
+  }else{
+    setMsg('mirMsgB','<span class="bad">The shards rattle apart. Interleave the two streams correctly.</span>');
+  }
+}
+
+/* ---------- ROOM 4: FINAL DOOR ---------- */
+function checkDoorA(){
+  attempts.doorA++;
+  const v = document.getElementById('doorSeason').value.trim().toLowerCase();
+  if(v==='autumn'){
+    setMsg('doorMsgA','<span class="ok">The arch warms. Two more locks remain…</span>');
+    hide(document.getElementById('doorA')); showStep('doorB');
+  }else{
+    setMsg('doorMsgA','<span class="bad">The wind stays silent. Read the first letters of each line.</span>');
+  }
+}
+function checkDoorB(){
+  attempts.doorB++;
+  const a = document.getElementById('lockLib').value.trim();
+  const b = document.getElementById('lockMir').value.trim().toUpperCase();
+  const c = document.getElementById('lockSeason').value.trim().toLowerCase();
+  if(a==='1988' && b==='CANDLELIGHT' && c==='autumn'){
+    setMsg('doorMsgB','<span class="ok">All three locks turn in unison…</span>');
+    setTimeout(()=>{ showScene('scene-end','door'); }, 900);
+  }else{
+    setMsg('doorMsgB','<span class="bad">The mechanism resists. Ensure all three answers are correct.</span>');
+  }
+}
+
+/* ---------- INITIAL ---------- */
+showScene('scene-intro','intro'); // boot
+</script>
 </body>
 </html>
