@@ -3,291 +3,330 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Haunted Escape Room — Halloween (B1)</title>
+<title>Haunted Escape Room — Online Edition (B1)</title>
 <style>
-  :root{
-    --bg:#0f0f14; --card:#181922; --ink:#e8ecff; --muted:#aeb3d1;
-    --accent:#ff7a00; --ok:#3ecf8e; --warn:#ffcc00; --bad:#ff5a6a;
-    --shadow:0 10px 30px rgba(0,0,0,.4);
-  }
-  html,body{height:100%;margin:0;background:radial-gradient(1200px 800px at 70% -10%,#1b1c28 0%, #0f0f14 55%);}
-  body{color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;}
-  .wrap{max-width:980px;margin:0 auto;padding:22px 14px 40px;}
-  h1{font-size:clamp(24px,3.8vw,36px);margin:6px 0 10px;letter-spacing:.5px}
-  .sub{color:var(--muted);margin-bottom:18px}
-  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 18px}
-  .btn{background:var(--card);color:var(--ink);border:1px solid #2b2d3a;border-radius:10px;padding:10px 14px;cursor:pointer;box-shadow:var(--shadow);transition:transform .05s}
-  .btn:active{transform:translateY(1px)}
-  .btn.ok{background:#183826;border-color:#265b3e;color:#c9f7df}
-  .btn.ghost{background:transparent;border:1px dashed #3b3d4f;color:var(--muted)}
-  .row{display:grid;grid-template-columns:1fr;gap:16px}
-  @media(min-width:880px){.row{grid-template-columns:1fr 1fr}}
-  .card{background:linear-gradient(180deg,#1a1c29 0%,#141521 100%);border:1px solid #2a2c3a;border-radius:16px;box-shadow:var(--shadow);padding:16px}
-  .title{font-weight:700;margin:0 0 10px;display:flex;align-items:center;gap:10px}
-  .hint{color:var(--warn);font-size:14px;margin-top:8px}
-  .okMsg{color:var(--ok);font-weight:600}
-  .badMsg{color:var(--bad);font-weight:600}
-  .muted{color:var(--muted)}
-  .flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  .center{display:grid;place-items:center}
-  .input, .code{background:#0f1017;border:1px solid #2b2d3a;color:var(--ink);padding:10px 12px;border-radius:10px}
-  .code{font-weight:700;letter-spacing:2px;width:110px;text-align:center}
-  .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:#0d0e14;border:1px solid #2a2b38;color:var(--muted);font-size:12px}
-  .kbrd{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;background:#10121a;border:1px solid #2f3040;padding:2px 6px;border-radius:6px}
-  .progress{height:10px;background:#0d0e14;border:1px solid #2a2b38;border-radius:999px;overflow:hidden;margin:8px 0 0}
-  .bar{height:100%;width:0;background:linear-gradient(90deg,#ff7a00,#ffb703);transition:width .4s}
-  .drags{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
-  .chip{user-select:none;padding:8px 10px;border-radius:12px;border:1px solid #3a3c51;background:#121320;cursor:grab}
-  .chip.dragging{opacity:.6}
-  .drop{min-height:66px;background:#0e1017;border:2px dashed #3a3c51;border-radius:12px;padding:8px}
-  .drop.filled{border-style:solid;border-color:#2d885f;background:#0f1a16}
-  .letters{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:6px}
-  .tile{background:#10121a;border:1px solid #2e3043;border-radius:10px;padding:10px 12px;min-width:40px;text-align:center;font-weight:700;cursor:grab}
-  .slots{display:flex;gap:8px;justify-content:center;margin-top:10px}
-  .slot{width:40px;height:44px;border-radius:10px;border:2px dashed #3a3c51;background:#0f1017;display:grid;place-items:center;font-weight:700}
-  .slot.filled{border-color:#2d885f;background:#0f1a16}
-  .foot{color:var(--muted);font-size:12px;margin-top:18px}
+:root{
+  --bg:#0f0f14; --card:#181922; --ink:#e8ecff; --muted:#aeb3d1;
+  --accent:#ff7a00; --ok:#3ecf8e; --warn:#ffcc00; --bad:#ff5a6a;
+  --edge:#2b2d3a; --shadow:0 12px 34px rgba(0,0,0,.45);
+}
+html,body{height:100%;margin:0;background:#0e0f14;color:var(--ink);
+  font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:18px 14px 40px}
+h1{margin:6px 0 8px;font-size:clamp(24px,4vw,38px);letter-spacing:.4px}
+.sub{color:var(--muted);margin-bottom:14px}
+.board{background:linear-gradient(180deg,#1b1d28 0%,#141521 100%);
+  border:1px solid var(--edge);border-radius:16px;box-shadow:var(--shadow);padding:16px}
+.row{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:900px){.row{grid-template-columns:1fr 1fr}}
+.card{background:linear-gradient(180deg,#1a1c29 0%,#141521 100%);
+  border:1px solid var(--edge);border-radius:16px;box-shadow:var(--shadow);padding:16px}
+.center{display:grid;place-items:center}
+.muted{color:var(--muted)}
+.btn{background:var(--card);border:1px solid var(--edge);color:var(--ink);
+  padding:10px 14px;border-radius:12px;cursor:pointer;transition:.06s;box-shadow:var(--shadow)}
+.btn:active{transform:translateY(1px)}
+.btn.ok{background:#173925;border-color:#245f3e;color:#c9f7df}
+.btn.ghost{background:transparent;border:1px dashed #3c3e51;color:var(--muted)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 16px}
+.code{background:#0f1017;border:1px solid var(--edge);color:var(--ink);
+  padding:10px 12px;border-radius:10px;width:120px;text-align:center;letter-spacing:2px;font-weight:700}
+.input{background:#0f1017;border:1px solid var(--edge);color:var(--ink);
+  padding:10px 12px;border-radius:10px}
+.progress{height:10px;background:#0d0e14;border:1px solid #2a2b38;border-radius:999px;overflow:hidden}
+.bar{height:100%;width:0;background:linear-gradient(90deg,#ff7a00,#ffb703);transition:width .4s}
+.note{background:#111321;border:1px solid #2e3040;border-radius:12px;padding:10px;margin:8px 0}
+.flex{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.scene{border-radius:12px;overflow:hidden;border:1px solid #2a2c3a;background:#0f1017}
+.scene img{display:block;width:100%;height:auto}
+.hl{color:var(--warn)}
+.okMsg{color:var(--ok);font-weight:700}
+.badMsg{color:var(--bad);font-weight:700}
+
+/* hotspots */
+.hotwrap{position:relative}
+.hotwrap .pin{position:absolute;border:2px solid #7e819a;border-radius:12px}
+.pin:hover{box-shadow:0 0 0 3px rgba(255,122,0,.25)}
+.tooltip{position:absolute;left:0;top:100%;margin-top:6px;background:#10121a;border:1px solid #2f3040;
+  padding:8px 10px;border-radius:10px;white-space:nowrap;display:none}
+.pin.show+.tooltip{display:block}
+
+/* drag & drop chips */
+.drags{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.chip{user-select:none;padding:8px 10px;border-radius:12px;border:1px solid #3a3c51;background:#121320;cursor:grab}
+.chip.dragging{opacity:.6}
+.drop{min-height:72px;background:#0e1017;border:2px dashed #3a3c51;border-radius:12px;padding:8px}
+.drop.filled{border-style:solid;border-color:#2d885f;background:#0f1a16}
+
+/* letters */
+.letters{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+.tile{background:#10121a;border:1px solid #2e3043;border-radius:10px;padding:10px 12px;min-width:40px;
+  text-align:center;font-weight:700;cursor:grab}
+.slots{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.slot{width:42px;height:46px;border-radius:10px;border:2px dashed #3a3c51;background:#0f1017;display:grid;place-items:center;font-weight:700}
+.slot.filled{border-color:#2d885f;background:#0f1a16}
+
+/* intro */
+.introImg{border-radius:12px;border:1px solid #2e3040;overflow:hidden;background:#0f1017}
+.introImg img{display:block;width:100%;height:auto}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Haunted Escape Room</h1>
-  <div class="sub">B1 interactive lesson • Solve the clues and open the final door.</div>
+  <div class="sub">Online lesson • B1 • Solve four rooms to escape the house.</div>
 
-  <div class="toolbar">
-    <button class="btn ghost" id="btnHint">Hint</button>
-    <button class="btn ghost" id="btnReset">Reset</button>
-    <label class="pill"><input type="checkbox" id="reveal" /> Teacher reveal</label>
-  </div>
-
-  <div class="card">
-    <p class="muted"><strong>Story:</strong> You wake up in a dusty house. A cold note whispers: “Four rooms. Four steps. Then you’re free.”</p>
+  <div class="board" id="intro">
+    <div class="introImg"><img src="intro.png" alt="Haunted house intro"></div>
+    <div class="note">Welcome, traveler. The house is watching you. Click <b>Start</b> when your student is ready.</div>
+    <div class="toolbar">
+      <button class="btn ok" id="btnStart">Start</button>
+      <button class="btn ghost" id="btnReset">Reset</button>
+    </div>
     <div class="progress"><div class="bar" id="bar" style="width:0%"></div></div>
   </div>
 
-  <!-- ROOM 1 -->
-  <div class="row" id="room1">
-    <div class="card">
-      <h3 class="title">Room 1 — The Library 🔒</h3>
-      <p>Read the note carefully and find a <strong>4-digit code</strong> for the keypad.</p>
-      <p class="muted" id="libText">
-        The calendar shows <em>31 October</em>. Two thin candles are still burning on the table.
-        A big grandfather clock is frozen at <strong>seven o’clock</strong>. On the wall, a painting shows
-        <strong>three ravens</strong> flying above the trees. The note says:
-        <q>Take the <u>second number of the date</u>, then the <u>candles</u>, then the <u>hour</u>, then the <u>ravens</u>.</q>
-      </p>
-      <div class="flex">
-        <input class="code" id="code1" maxlength="4" placeholder="____" />
-        <button class="btn" id="check1">Unlock</button>
-        <span id="msg1"></span>
+  <!-- ROOM 1: LIBRARY -->
+  <div id="room1" style="display:none">
+    <div class="row">
+      <div class="card">
+        <h3>Room 1 — The Library 🔒</h3>
+        <p class="muted">Explore the objects. Each one hides a number. Enter the 4-digit code in the correct order.</p>
+        <div class="hotwrap scene">
+          <!-- если есть картинка библиотеки, можно заменить src; иначе оставь intro как фон -->
+          <img src="library.jpg" alt="Old library scene (optional placeholder)">
+          <!-- hotspots -->
+          <div class="pin" style="left:12%;top:60%;width:18%;height:18%" data-tip="Two candles are still burning."></div>
+          <div class="tooltip">Two candles are still burning.</div>
+
+          <div class="pin" style="left:68%;top:28%;width:17%;height:24%" data-tip="The clock is frozen at seven o’clock."></div>
+          <div class="tooltip">The clock is frozen at seven o’clock.</div>
+
+          <div class="pin" style="left:8%;top:20%;width:22%;height:24%" data-tip="A painting shows three ravens."></div>
+          <div class="tooltip">A painting shows three ravens.</div>
+
+          <div class="pin" style="left:44%;top:70%;width:14%;height:14%" data-tip="The calendar reads 31 October. Use the second number."></div>
+          <div class="tooltip">The calendar reads 31 October. Use the second number.</div>
+        </div>
+
+        <div class="note">
+          <div>Order on the note: <span class="hl">the second number of the date → the candles → the hour → the ravens</span>.</div>
+          <div class="flex" style="margin-top:8px">
+            <input class="code" id="code1" maxlength="4" placeholder="____" />
+            <button class="btn" id="check1">Unlock</button>
+            <span id="msg1"></span>
+          </div>
+        </div>
       </div>
-      <div class="foot">Answer key (for teacher): <span class="kbrd">1273</span></div>
-    </div>
-    <div class="card center">
-      <div>
-        <p class="muted">Vocabulary focus:</p>
-        <ul class="muted">
-          <li><b>frozen at</b> — stopped at (time)</li>
-          <li><b>ravens</b> — big black birds</li>
-          <li><b>in this order</b> — first A, then B, etc.</li>
-        </ul>
+      <div class="card">
+        <p class="muted"><b>Narration:</b> Dust swirls in the candlelight. The door waits in silence.</p>
+        <div class="grid2">
+          <button class="btn ghost" id="sfxCandle">Candle</button>
+          <button class="btn ghost" id="sfxClock">Clock tick</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ROOM 2 -->
-  <div class="row" id="room2" style="display:none">
-    <div class="card">
-      <h3 class="title">Room 2 — The Potion Lab 🧪</h3>
-      <p>Drag the <strong>3 correct ingredients</strong> into the cauldron to brew a light potion.</p>
-      <ul class="muted">
-        <li>It must come from the <b>night sky</b> (not a liquid).</li>
-        <li>Add an <b>autumn symbol</b> from the garden.</li>
-        <li>Finish with something that can <b>fly</b> but is <b>not a bat</b> and is <b>blue</b>.</li>
-      </ul>
-      <div class="drags" id="ingredients">
-        <div class="chip" draggable="true" data-id="moon">silver moon dust</div>
-        <div class="chip" draggable="true" data-id="slime">green slime bottle</div>
-        <div class="chip" draggable="true" data-id="legs">two spider legs</div>
-        <div class="chip" draggable="true" data-id="pumpkin">pumpkin slice</div>
-        <div class="chip" draggable="true" data-id="salt">a handful of salt</div>
-        <div class="chip" draggable="true" data-id="feather">blue feather</div>
+  <!-- ROOM 2: POTION -->
+  <div id="room2" style="display:none">
+    <div class="row">
+      <div class="card">
+        <h3>Room 2 — The Potion Lab 🧪</h3>
+        <p class="muted">“To see the truth in shadows, mix three gifts: one that shines in darkness, one that falls in autumn, one that flies with silence.”</p>
+        <div class="drags" id="ingredients">
+          <div class="chip" draggable="true" data-id="moon">silver moon dust</div>
+          <div class="chip" draggable="true" data-id="slime">green slime bottle</div>
+          <div class="chip" draggable="true" data-id="tongue">frog tongue</div>
+          <div class="chip" draggable="true" data-id="bat">bat wing</div>
+          <div class="chip" draggable="true" data-id="pumpkin">pumpkin slice</div>
+          <div class="chip" draggable="true" data-id="feather">blue feather</div>
+          <div class="chip" draggable="true" data-id="coin">silver coin</div>
+        </div>
+        <div class="drop" id="cauldron" aria-label="Cauldron — drop 3 items here"></div>
+        <div class="flex" style="margin-top:8px">
+          <button class="btn" id="check2">Brew</button>
+          <button class="btn ghost" id="reset2">Clear</button>
+          <span id="msg2"></span>
+        </div>
       </div>
-      <div class="drop" id="cauldron" aria-label="Cauldron — drop 3 items here"></div>
-      <div class="flex" style="margin-top:8px">
-        <button class="btn" id="check2">Brew</button>
-        <button class="btn ghost" id="reset2">Clear</button>
-        <span id="msg2"></span>
+      <div class="card">
+        <p class="muted"><b>Narration:</b> The room smells of herbs. The cauldron hums softly.</p>
+        <div class="grid2">
+          <button class="btn ghost" id="sfxBubble">Bubbling</button>
+          <button class="btn ghost" id="sfxSpark">Spark</button>
+        </div>
       </div>
-      <div class="foot">Answer key: <span class="kbrd">moon dust</span>, <span class="kbrd">pumpkin slice</span>, <span class="kbrd">blue feather</span></div>
-    </div>
-    <div class="card">
-      <p class="muted"><b>Language aim:</b> describing items and reasons — “I chose the feather because it can fly.”</p>
-      <p class="muted">Optional speaking: Ask the student to explain each choice in one sentence.</p>
     </div>
   </div>
 
-  <!-- ROOM 3 -->
-  <div class="row" id="room3" style="display:none">
-    <div class="card">
-      <h3 class="title">Room 3 — The Gallery 🖼️</h3>
-      <p>Build the secret word by dragging letters into the boxes.</p>
-      <div class="letters" id="letters"></div>
-      <div class="slots" id="slots"></div>
-      <div class="flex" style="margin-top:10px">
-        <button class="btn" id="check3">Check word</button>
-        <button class="btn ghost" id="reset3">Shuffle</button>
-        <span id="msg3"></span>
+  <!-- ROOM 3: GALLERY -->
+  <div id="room3" style="display:none">
+    <div class="row">
+      <div class="card">
+        <h3>Room 3 — The Gallery 🖼️</h3>
+        <p class="muted">Build the secret word. One letter here is <b>extra</b> — it doesn’t belong.</p>
+        <div class="letters" id="letters"></div>
+        <div class="slots" id="slots"></div>
+        <div class="flex" style="margin-top:10px">
+          <button class="btn" id="check3">Check word</button>
+          <button class="btn ghost" id="reset3">Shuffle</button>
+          <span id="msg3"></span>
+        </div>
       </div>
-      <div class="foot">Answer key: <span class="kbrd">PUMPKIN</span></div>
-    </div>
-    <div class="card">
-      <p class="muted"><b>Tip:</b> say the letters aloud while moving them to reinforce spelling.</p>
+      <div class="card">
+        <p class="muted"><b>Narration:</b> Eyes in the portraits seem to follow you. When the word is right, a cold breeze will pass.</p>
+      </div>
     </div>
   </div>
 
-  <!-- ROOM 4 -->
-  <div class="row" id="room4" style="display:none">
-    <div class="card">
-      <h3 class="title">Final Door 🚪</h3>
-      <p>Enter the <b>library code</b> again and the <b>gallery word</b>. If your potion was correct, the door will open.</p>
-      <div class="flex">
-        <input class="code" id="finalCode" maxlength="4" placeholder="code" />
-        <input class="input" id="finalWord" maxlength="16" placeholder="word (UPPERCASE or lowercase)" />
-        <button class="btn ok" id="finish">Open</button>
+  <!-- ROOM 4: FINAL -->
+  <div id="room4" style="display:none">
+    <div class="row">
+      <div class="card">
+        <h3>Final Door 🚪</h3>
+        <p class="muted">Enter the library code, the gallery word, and answer the question you hear.</p>
+        <div class="flex">
+          <input class="code" id="finalCode" maxlength="4" placeholder="code" />
+          <input class="input" id="finalWord" maxlength="20" placeholder="word" />
+        </div>
+        <div class="note">
+          <div class="flex">
+            <button class="btn ghost" id="playQ">Play question</button>
+            <input class="input" id="finalAnswer" placeholder="answer (one word)" />
+            <button class="btn ok" id="finish">Open</button>
+          </div>
+          <div id="finalMsg" style="margin-top:8px"></div>
+        </div>
       </div>
-      <p id="finalMsg" style="margin-top:8px"></p>
-    </div>
-    <div class="card center">
-      <div class="muted">Great for B1 speaking: “What was the hardest clue? Why?”</div>
+      <div class="card">
+        <p class="muted"><b>Narration:</b> A heavy lock waits. If your memory is true, the forest will welcome you.</p>
+      </div>
     </div>
   </div>
-
-  <div id="hintBox" class="card" style="display:none;margin-top:14px"></div>
-
-  <p class="foot">© For classroom use. Works offline. No external assets.</p>
 </div>
 
 <script>
-/* ---------- UTILS ---------- */
+/* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
+function say(el,msg,type=''){ el.innerHTML = `<span class="${type==='ok'?'okMsg':type==='bad'?'badMsg':'muted'}">${msg}</span>`;}
+function progress(){ const done = ['r1','r2','r3'].filter(k=>state[k]).length; $('#bar').style.width = (done/3*100)+'%'; }
+function next(id){ ['intro','room1','room2','room3','room4'].forEach(i=>{ $('#'+i).style.display = (i===id)?'':'none'; }); }
+
+/* ---------- audio (optional assets) ---------- */
+const sfx = {
+  candle:  new Audio('candle.mp3'),
+  clock:   new Audio('clock.mp3'),
+  bubble:  new Audio('bubble.mp3'),
+  spark:   new Audio('spark.mp3'),
+  wrong:   new Audio('wrong.mp3'),
+  chime:   new Audio('chime.mp3'),
+  door:    new Audio('door.mp3'),
+  forest:  new Audio('forest.mp3'),
+  wind:    new Audio('wind.mp3')
+};
+Object.values(sfx).forEach(a=>{ if(a){ a.preload='auto'; a.volume=0.8; }});
+
+/* ---------- state ---------- */
 const state = {
   r1:false, r2:false, r3:false,
   code1:'1273',
-  potionSet: new Set(['moon','pumpkin','feather']),
-  galleryWord:'PUMPKIN'
+  potionSet:new Set(['moon','pumpkin','feather']),
+  galleryWord:'CANDLELIGHT',  // target
+  galleryPool:'CANDLELIGHTX'  // has extra letter X
 };
-function progress(){
-  const done = [state.r1,state.r2,state.r3].filter(Boolean).length;
-  $('#bar').style.width = (done/3*100)+'%';
-}
-function show(id){ $(id).style.display = ''; }
-function hide(id){ $(id).style.display = 'none'; }
-function say(el,msg,type=''){ el.innerHTML = `<span class="${type==='ok'?'okMsg':type==='bad'?'badMsg':'muted'}">${msg}</span>`; }
 
-/* ---------- TEACHER REVEAL ---------- */
-$('#reveal').addEventListener('change', e=>{
-  $$('.foot').forEach(f=> f.style.display = e.target.checked ? '' : 'none');
-});
-$('#reveal').checked = false; $$('.foot').forEach(f=> f.style.display='none');
+/* ---------- intro ---------- */
+$('#btnStart').addEventListener('click', ()=>{ next('room1');});
 
-/* ---------- HINTS ---------- */
-const hint = $('#hintBox');
-const hints = {
-  1: `Library hint: <br>Take these numbers <b>in order</b> — date’s second digit, number of candles, the hour on the clock, number of ravens.`,
-  2: `Potion hint: <br>Night sky (solid, not liquid) → <b>moon dust</b>. Autumn symbol → <b>pumpkin</b>. Can fly and blue → <b>feather</b>.`,
-  3: `Gallery hint: <br>It’s a classic Halloween word. Starts with <b>P</b> and ends with <b>N</b>.`
-};
-let currentRoom = 1;
-$('#btnHint').addEventListener('click', ()=>{
-  hint.style.display = '';
-  hint.innerHTML = hints[currentRoom];
-});
-
-/* ---------- RESET ---------- */
+/* reset (full) */
 $('#btnReset').addEventListener('click', ()=>location.reload());
 
-/* ---------- ROOM 1 ---------- */
+/* ---------- Room1 interactions ---------- */
+// toggle tooltips on click
+$$('#room1 .pin').forEach(pin=>{
+  pin.addEventListener('click', ()=>{
+    pin.classList.toggle('show');
+    const tip = pin.nextElementSibling;
+    tip.classList.toggle('show');
+  });
+});
+// simple sfx buttons
+$('#sfxCandle').addEventListener('click', ()=>{ try{sfx.candle.currentTime=0;sfx.candle.play();}catch(_){} });
+$('#sfxClock').addEventListener('click', ()=>{ try{sfx.clock.currentTime=0;sfx.clock.play();}catch(_){} });
+
 $('#check1').addEventListener('click', ()=>{
-  const v = ($('#code1').value || '').replace(/\D/g,'');
-  if(v === state.code1){
-    say($('#msg1'),'The lock clicks open. Go to the next room!','ok');
-    state.r1 = true; progress(); next(2);
+  const v = ($('#code1').value||'').replace(/\D/g,'');
+  if(v===state.code1){
+    say($('#msg1'),'The lock clicks open.','ok');
+    state.r1 = true; progress();
+    setTimeout(()=> next('room2'), 600);
+    try{sfx.chime.currentTime=0;sfx.chime.play();}catch(_){}
   }else{
-    say($('#msg1'),'Not yet. Read the note again.','bad');
+    say($('#msg1'),'Not yet. Explore the objects again.','bad');
+    try{sfx.wrong.currentTime=0;sfx.wrong.play();}catch(_){}
   }
 });
-function next(n){
-  currentRoom = n;
-  ['#room1','#room2','#room3','#room4'].forEach((id,i)=> i+1===n ? show(id) : hide(id));
-}
 
-/* ---------- ROOM 2 (drag & drop) ---------- */
-const cauldron = $('#cauldron');
-let chosen = [];
+/* ---------- Room2 drag & drop ---------- */
+const cauldron = $('#cauldron'); let chosen=[];
 function setupDrag(){
-  $$('#ingredients .chip').forEach(chip=>{
-    chip.addEventListener('dragstart', e=>{
-      e.dataTransfer.setData('text/plain', chip.dataset.id);
-      chip.classList.add('dragging');
+  $$('#ingredients .chip').forEach(ch=>{
+    ch.addEventListener('dragstart', e=>{
+      e.dataTransfer.setData('text/plain', ch.dataset.id);
+      ch.classList.add('dragging');
     });
-    chip.addEventListener('dragend', ()=> chip.classList.remove('dragging'));
+    ch.addEventListener('dragend', ()=> ch.classList.remove('dragging'));
   });
-  ['dragover','dragenter'].forEach(ev=> cauldron.addEventListener(ev, e=>{
-    e.preventDefault();
-  }));
+  ['dragover','dragenter'].forEach(ev=> cauldron.addEventListener(ev, e=>e.preventDefault()));
   cauldron.addEventListener('drop', e=>{
     e.preventDefault();
     const id = e.dataTransfer.getData('text/plain');
-    if(!id) return;
-    if(chosen.includes(id)) return;
-    if(chosen.length>=3) return;
+    if(!id || chosen.includes(id) || chosen.length>=3) return;
     chosen.push(id);
     const clone = document.querySelector(`.chip[data-id="${id}"]`).cloneNode(true);
-    clone.removeAttribute('draggable');
-    clone.classList.remove('dragging');
+    clone.removeAttribute('draggable'); clone.classList.remove('dragging');
     cauldron.appendChild(clone);
     cauldron.classList.toggle('filled', chosen.length>0);
+    try{sfx.bubble.currentTime=0;sfx.bubble.play();}catch(_){}
   });
 }
 setupDrag();
 
 $('#reset2').addEventListener('click', ()=>{
-  chosen = [];
-  cauldron.innerHTML = '';
-  cauldron.classList.remove('filled');
-  say($('#msg2'),'','');
+  chosen=[]; cauldron.innerHTML=''; cauldron.classList.remove('filled'); say($('#msg2'),'','');
 });
+$('#sfxBubble').addEventListener('click', ()=>{ try{sfx.bubble.currentTime=0;sfx.bubble.play();}catch(_){ }});
+$('#sfxSpark').addEventListener('click', ()=>{ try{sfx.spark.currentTime=0;sfx.spark.play();}catch(_){ }});
 
 $('#check2').addEventListener('click', ()=>{
   const ok = chosen.length===3 && chosen.every(x=>state.potionSet.has(x));
   if(ok){
-    say($('#msg2'),'The potion glows softly. You feel safer.','ok');
-    state.r2 = true; progress(); next(3);
+    say($('#msg2'),'The potion glows softly.','ok');
+    try{sfx.spark.currentTime=0;sfx.spark.play();}catch(_){}
+    state.r2 = true; progress(); setTimeout(()=>next('room3'),650);
   }else{
     say($('#msg2'),'The cauldron spits. Try a different combination.','bad');
+    try{sfx.wrong.currentTime=0;sfx.wrong.play();}catch(_){}
   }
 });
 
-/* ---------- ROOM 3 (letters) ---------- */
-const letters = 'PUMPKIN'.split('');
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a;}
+/* ---------- Room3 letters ---------- */
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a; }
 function buildLetters(){
-  $('#letters').innerHTML = '';
-  $('#slots').innerHTML = '';
-  // tiles
-  shuffle([...letters]).forEach((ch,idx)=>{
-    const t = document.createElement('div');
-    t.className='tile'; t.textContent=ch; t.draggable=true; t.dataset.letter=ch;
+  const pool = state.galleryPool.split('');
+  $('#letters').innerHTML=''; $('#slots').innerHTML='';
+  shuffle(pool).forEach(ch=>{
+    const t=document.createElement('div'); t.className='tile'; t.textContent=ch; t.draggable=true; t.dataset.letter=ch;
     t.addEventListener('dragstart', e=>{ e.dataTransfer.setData('text/plain', ch); t.classList.add('dragging');});
     t.addEventListener('dragend', ()=> t.classList.remove('dragging'));
     $('#letters').appendChild(t);
   });
-  // slots
-  letters.forEach((_,i)=>{
-    const s = document.createElement('div');
-    s.className='slot'; s.dataset.index=i;
+  // slots length = word length
+  state.galleryWord.split('').forEach((_,i)=>{
+    const s=document.createElement('div'); s.className='slot'; s.dataset.index=i;
     s.addEventListener('dragover', e=>e.preventDefault());
     s.addEventListener('drop', e=>{
       e.preventDefault();
@@ -300,33 +339,44 @@ function buildLetters(){
   });
 }
 buildLetters();
-
 $('#reset3').addEventListener('click', buildLetters);
 
 $('#check3').addEventListener('click', ()=>{
   const word = $$('#slots .slot').map(s=>s.dataset.letter||'').join('');
-  if(word.toUpperCase() === state.galleryWord){
-    say($('#msg3'),'The portraits blink. A secret key appears.','ok');
-    state.r3 = true; progress(); next(4);
+  if(word.toUpperCase()===state.galleryWord){
+    say($('#msg3'),'Cold air passes through the hall.','ok');
+    state.r3 = true; progress(); setTimeout(()=>next('room4'),700);
+    try{sfx.wind.currentTime=0;sfx.wind.play();}catch(_){}
   }else{
-    say($('#msg3'),'Look again. The word is connected with Halloween.','bad');
+    say($('#msg3'),'Look again. One letter is extra.','bad');
+    try{sfx.wrong.currentTime=0;sfx.wrong.play();}catch(_){}
   }
 });
 
-/* ---------- FINAL DOOR ---------- */
+/* ---------- Final ---------- */
+$('#playQ').addEventListener('click', ()=>{
+  // если нет аудиофайла, просто проговори вопрос вслух; здесь — синтетическая подмена
+  const t = new SpeechSynthesisUtterance("What season is this story set in?");
+  try{ speechSynthesis.cancel(); speechSynthesis.speak(t); }catch(_){}
+});
+
 $('#finish').addEventListener('click', ()=>{
-  const c = ($('#finalCode').value||'').replace(/\D/g,'');
-  const w = ($('#finalWord').value||'').trim().toUpperCase();
-  const potionOk = state.r2; // must be brewed correctly
-  if(c===state.code1 && w===state.galleryWord && potionOk){
+  const code = ($('#finalCode').value||'').replace(/\D/g,'');
+  const word = ($('#finalWord').value||'').trim().toUpperCase();
+  const ans  = ($('#finalAnswer').value||'').trim().toLowerCase();
+  const ok = (code===state.code1) && (word===state.galleryWord) && (ans==='autumn');
+  if(ok){
     $('#finalMsg').innerHTML = `<span class="okMsg">The door opens. You escaped! 🧡</span>`;
+    try{sfx.door.currentTime=0;sfx.door.play();}catch(_){}
+    setTimeout(()=>{ try{sfx.forest.currentTime=0;sfx.forest.play();}catch(_){} }, 500);
   }else{
-    $('#finalMsg').innerHTML = `<span class="badMsg">Something is wrong. Check the library code, the potion, and the word.</span>`;
+    $('#finalMsg').innerHTML = `<span class="badMsg">Something is wrong. Check the code, the word, and the answer.</span>`;
+    try{sfx.wrong.currentTime=0;sfx.wrong.play();}catch(_){}
   }
 });
 
-/* start at room 1 */
-next(1);
+/* go start screen by default */
+next('intro');
 </script>
 </body>
 </html>
