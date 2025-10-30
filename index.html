@@ -3,215 +3,120 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Haunted Escape – Advanced Edition</title>
+<title>Halloween Mystery Game</title>
 <style>
-body{
-  margin:0;
-  background:#0d0d10;
-  color:#e8e8f3;
-  font-family:'Segoe UI',system-ui,sans-serif;
-  line-height:1.6;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Georgia", serif;
+  background-color: #0d0d0d;
+  color: #f3e9d2;
+  overflow: hidden;
 }
-.container{
-  max-width:800px;
-  margin:0 auto;
-  padding:30px 20px 80px;
+#game-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  transition: background-image 1s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40px;
+  box-sizing: border-box;
 }
-h1,h2{text-align:center;color:#ff7a00;}
-button{
-  background:#1a1a22;border:1px solid #2d2d3b;color:#eee;
-  padding:10px 18px;border-radius:8px;cursor:pointer;margin-top:10px;
+.text-box {
+  background: rgba(10, 10, 10, 0.8);
+  padding: 25px;
+  border-radius: 12px;
+  font-size: 1.2em;
+  line-height: 1.5;
+  max-width: 700px;
 }
-button:hover{background:#242433;}
-input{
-  padding:8px 10px;border-radius:6px;border:1px solid #2e2e3a;
-  background:#15151c;color:#fff;width:140px;text-align:center;
+button {
+  margin-top: 20px;
+  background-color: #d4a373;
+  border: none;
+  color: #1a1a1a;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
-.card{
-  background:#16161d;border:1px solid #2d2d3b;border-radius:12px;
-  padding:18px 22px;margin-bottom:25px;
-  box-shadow:0 0 12px rgba(0,0,0,.5);transition:opacity .6s ease;
+button:hover {
+  background-color: #e7b67a;
 }
-.hidden{display:none;opacity:0;}
-.visible{display:block;opacity:1;}
-.msg{margin-top:10px;}
-.ok{color:#7df9b7;font-weight:600;}
-.bad{color:#ff6666;font-weight:600;}
-.note{color:#b5b5ca;font-style:italic;}
-.fade{animation:fadein 1.2s;}
-@keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-img.intro{display:block;width:100%;max-width:720px;margin:0 auto 15px;border-radius:12px;border:1px solid #2c2c39;}
+.fade-in {
+  animation: fadeIn 1s ease forwards;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>🎃 Haunted Escape – Advanced Edition</h1>
-  <p style="text-align:center;color:#b5b5ca">Interactive Halloween lesson (B1–B2)</p>
 
-  <!-- INTRO -->
-  <div class="card visible fade" id="intro">
-    <img src="intro.png" alt="Haunted house intro" class="intro">
-    <h2>Intro – “The Midnight House”</h2>
-    <p>You wake up in a dusty armchair. Around you — an old house.  
-    A strange voice whispers: <em>“Solve what I left behind — or stay forever.”</em></p>
-    <p>A flickering candle reveals your first clue...</p>
-    <button onclick="next('intro','room1')">Enter the Library</button>
-  </div>
-
-  <!-- ROOM 1 -->
-  <div class="card hidden" id="room1">
-    <h2>Room 1 — The Whispering Library</h2>
-    <p>The shelves stretch to the ceiling. Books whisper quietly.  
-    Inside an encyclopedia you find a note:</p>
-    <blockquote><em>“Truth hides in pages that never lie —  
-    follow the first, the last, the one that never dies.”</em></blockquote>
-
-    <p>Three books lie open:</p>
-    <ul>
-      <li><b>“History of Kings”</b> — page <b>1</b></li>
-      <li><b>“The End of Time”</b> — page <b>999</b></li>
-      <li><b>“Immortal Tales”</b> — page marked with the <b>∞</b> symbol</li>
-    </ul>
-
-    <p>The lock has four digits. Nearby, the clock shows <b>2:00 AM</b>.</p>
-    <p class="note">Hint: infinity (∞) turned sideways looks like a number.</p>
-
-    <div>
-      <input id="libInput" placeholder="code">
-      <button onclick="checkLibrary()">Unlock</button>
-      <div class="msg" id="libMsg"></div>
-    </div>
-  </div>
-
-  <!-- ROOM 2 -->
-  <div class="card hidden" id="room2">
-    <h2>Room 2 — The Alchemist’s Workshop</h2>
-    <p>The air smells of herbs and metal. On the desk — seven bottles labeled in Latin:</p>
-    <p><b>Luna, Aqua, Ignis, Ventus, Umbra, Vita, Vox.</b></p>
-    <blockquote><em>“Combine what breathes, what burns, what hides —  
-    but beware what screams.”</em></blockquote>
-
-    <p class="note">Translate and choose three words that fit the clue.</p>
-    <p>Type them separated by commas (example: <i>ignis, ventus, umbra</i>)</p>
-
-    <div>
-      <input id="alcInput" placeholder="three words">
-      <button onclick="checkAlchemist()">Mix</button>
-      <div class="msg" id="alcMsg"></div>
-    </div>
-  </div>
-
-  <!-- ROOM 3 -->
-  <div class="card hidden" id="room3">
-    <h2>Room 3 — The Hall of Mirrors</h2>
-    <p>You step into a corridor full of mirrors.  
-    Some reflect you, others show something else.  
-    The inscription reads: <em>“Light can lie.”</em></p>
-
-    <ul>
-      <li><b>A:</b> You holding a candle.</li>
-      <li><b>B:</b> An empty corridor.</li>
-      <li><b>C:</b> You — but blinking backwards.</li>
-      <li><b>D:</b> You — but with no candle.</li>
-    </ul>
-
-    <p>Under mirror D, letters are scratched into glass:</p>
-    <p><code>A D N C I E L G T H</code></p>
-
-    <div>
-      <input id="mirInput" placeholder="word">
-      <button onclick="checkMirror()">Solve</button>
-      <div class="msg" id="mirMsg"></div>
-    </div>
-  </div>
-
-  <!-- ROOM 4 -->
-  <div class="card hidden" id="room4">
-    <h2>Room 4 — The Final Door</h2>
-    <p>The main hall waits. The final door glows faintly.  
-    Three locks ask for what you learned:</p>
-    <ol>
-      <li>The <b>code</b> from the Library</li>
-      <li>The <b>word</b> from the Mirrors</li>
-      <li>The <b>truth</b> from your heart</li>
-    </ol>
-
-    <p>A voice whispers: <em>“The house sleeps when the leaves fall.”</em></p>
-
-    <div>
-      <input id="finalCode" placeholder="code">
-      <input id="finalWord" placeholder="word">
-      <input id="finalAnswer" placeholder="season">
-      <button onclick="checkFinal()">Open Door</button>
-      <div class="msg" id="finalMsg"></div>
-    </div>
-  </div>
-
-  <!-- END -->
-  <div class="card hidden" id="end">
-    <h2>You Escaped! 🌕</h2>
-    <p>The door opens, leaves swirl around you.  
-    A voice whispers: <em>“You’ve seen what lies beyond reflection.”</em></p>
-  </div>
+<div id="game-container">
+  <div id="text" class="text-box fade-in"></div>
+  <button id="next-btn">Next</button>
 </div>
 
 <script>
-function next(hide,show){
-  document.getElementById(hide).classList.replace('visible','hidden');
-  document.getElementById(hide).style.display='none';
-  const t=document.getElementById(show);
-  t.classList.remove('hidden');t.classList.add('visible','fade');
-  window.scrollTo(0,0);
-}
-/* ROOM 1 */
-function checkLibrary(){
-  const v=document.getElementById('libInput').value.trim();
-  const msg=document.getElementById('libMsg');
-  if(v==='1988'){
-    msg.innerHTML='<span class="ok">The lock clicks open. A cold wind passes by...</span>';
-    setTimeout(()=>next('room1','room2'),900);
-  }else{
-    msg.innerHTML='<span class="bad">Nothing happens. Try again.</span>';
+const scenes = [
+  {
+    bg: "intro.png",
+    text: "It’s a stormy Halloween night. The power flickers, and you find yourself trapped in an old mansion. The door locks behind you... Your goal: find the key to escape before midnight."
+  },
+  {
+    bg: "library.png",
+    text: "Room 1 – The Library. Shelves of ancient books tower around you. A single candle burns beside an open tome with strange runes. <br><br><strong>Task:</strong> Decode the message: <em>“The word before ‘moonlight’ hides your way.”</em><br><br>👉 What English word might be hidden before 'moonlight' in common phrases?",
+  },
+  {
+    bg: "alchemy.png",
+    text: "Room 2 – The Alchemist’s Workshop. Bottles glow with eerie green light. A note reads: <em>“Combine the essence of truth with the breath of fire.”</em><br><br><strong>Task:</strong> Choose the correct combination:<br>1️⃣ Honesty + Heat<br>2️⃣ Lie + Smoke<br>3️⃣ Fire + Ice"
+  },
+  {
+    bg: "mirrors.png",
+    text: "Room 3 – The Hall of Mirrors. You see dozens of your reflections. One whispers: <em>“Find the truth among lies.”</em><br><br><strong>Task:</strong> Which sentence is true?<br>1️⃣ The more mirrors you have, the less reflections you see.<br>2️⃣ Each mirror shows a reflection of truth.<br>3️⃣ Mirrors can only lie if you look away."
+  },
+  {
+    bg: "door.png",
+    text: "Final Room – The Door. A massive wooden gate stands before you. Above it glows an inscription: <em>“Speak the word of release.”</em><br><br><strong>Task:</strong> What word opens all doors? (Hint: it’s polite and magical.)"
+  },
+  {
+    bg: "door.png",
+    text: "The door creaks open… You step out into the night, free at last. Happy Halloween! 🎃"
   }
+];
+
+let currentScene = 0;
+
+const textElement = document.getElementById("text");
+const nextBtn = document.getElementById("next-btn");
+const container = document.getElementById("game-container");
+
+function updateScene() {
+  const scene = scenes[currentScene];
+  container.style.backgroundImage = `url(${scene.bg})`;
+  textElement.innerHTML = scene.text;
+  textElement.classList.add("fade-in");
+  setTimeout(() => textElement.classList.remove("fade-in"), 1000);
 }
-/* ROOM 2 */
-function checkAlchemist(){
-  const v=document.getElementById('alcInput').value.toLowerCase().replace(/\s/g,'');
-  const correct=['ventus','ignis','umbra'];
-  const words=v.split(',').filter(Boolean);
-  const msg=document.getElementById('alcMsg');
-  const ok=words.length===3 && correct.every(c=>words.includes(c));
-  if(ok){
-    msg.innerHTML='<span class="ok">The potion glows silver-blue and reveals the next clue: “Light can lie.”</span>';
-    setTimeout(()=>next('room2','room3'),1000);
-  }else{
-    msg.innerHTML='<span class="bad">The potion turns green and hisses. Try again.</span>';
+
+nextBtn.addEventListener("click", () => {
+  currentScene++;
+  if (currentScene < scenes.length) {
+    updateScene();
+  } else {
+    nextBtn.style.display = "none";
   }
-}
-/* ROOM 3 */
-function checkMirror(){
-  const v=document.getElementById('mirInput').value.trim().toUpperCase();
-  const msg=document.getElementById('mirMsg');
-  if(v==='CANDLELIGHT'){
-    msg.innerHTML='<span class="ok">The mirrors shatter, revealing a glowing doorway ahead.</span>';
-    setTimeout(()=>next('room3','room4'),1000);
-  }else{
-    msg.innerHTML='<span class="bad">Your reflection shakes its head. The letters are still wrong.</span>';
-  }
-}
-/* ROOM 4 */
-function checkFinal(){
-  const code=document.getElementById('finalCode').value.trim();
-  const word=document.getElementById('finalWord').value.trim().toUpperCase();
-  const ans=document.getElementById('finalAnswer').value.trim().toLowerCase();
-  const msg=document.getElementById('finalMsg');
-  if(code==='1988' && word==='CANDLELIGHT' && ans==='autumn'){
-    msg.innerHTML='<span class="ok">The door opens slowly...</span>';
-    setTimeout(()=>next('room4','end'),1200);
-  }else{
-    msg.innerHTML='<span class="bad">The locks refuse to move. Something is missing.</span>';
-  }
-}
+});
+
+updateScene();
 </script>
+
 </body>
 </html>
